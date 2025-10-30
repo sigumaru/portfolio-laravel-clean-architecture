@@ -2,6 +2,12 @@
 
 namespace App\Providers;
 
+use App\Application\Contracts\Interactors\Blog\CreateBlogPostInteractorInterface;
+use App\Application\Contracts\Interactors\Blog\DeleteBlogPostInteractorInterface;
+use App\Application\Contracts\Interactors\Blog\GetBlogPostsInteractorInterface;
+use App\Application\Contracts\Interactors\Blog\UpdateBlogPostInteractorInterface;
+use App\Application\Contracts\Interactors\Contact\SendContactInteractorInterface;
+use App\Application\Contracts\Interactors\Profile\UpdateProfileInteractorInterface;
 use Illuminate\Support\ServiceProvider;
 
 // Domain Repository Interfaces
@@ -26,16 +32,26 @@ use App\Presentation\Http\Presenters\WebProfilePresenter;
 
 // Application Service Interfaces
 use App\Application\Contracts\Services\MailServiceInterface;
-
+use App\Application\Interactors\Blog\CreateBlogPostInteractor;
+use App\Application\Interactors\Blog\DeleteBlogPostInteractor;
+use App\Application\Interactors\Blog\GetBlogPostsInteractor;
+use App\Application\Interactors\Blog\UpdateBlogPostInteractor;
+use App\Application\Interactors\Contact\SendContactInteractor;
+use App\Application\Interactors\Profile\UpdateProfileInteractor;
 // Infrastructure Service Implementations
 use App\Infrastructure\Services\LaravelMailService;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
+
     public function register(): void
+    {
+        $this->registerBlogInteractors();
+        $this->registerContactInteractors();
+        $this->registerProfileInteractors();
+    }
+
+    public function registerBlogInteractors(): void
     {
         // Repository bindings
         $this->app->bind(
@@ -73,6 +89,45 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             MailServiceInterface::class,
             LaravelMailService::class
+        );
+
+        // Interactor bindings
+        $this->app->bind(
+            CreateBlogPostInteractorInterface::class,
+            CreateBlogPostInteractor::class
+        );
+
+        $this->app->bind(
+            UpdateBlogPostInteractorInterface::class,
+            UpdateBlogPostInteractor::class
+        );
+
+        $this->app->bind(
+            DeleteBlogPostInteractorInterface::class,
+            DeleteBlogPostInteractor::class
+        );
+
+        $this->app->bind(
+            GetBlogPostsInteractorInterface::class,
+            GetBlogPostsInteractor::class
+        );
+
+        
+    }
+
+    private function registerContactInteractors(): void
+    {
+        $this->app->bind(
+            SendContactInteractorInterface::class,
+            SendContactInteractor::class
+        );
+    }
+
+    private function registerProfileInteractors(): void
+    {
+        $this->app->bind(
+            UpdateProfileInteractorInterface::class,
+            UpdateProfileInteractor::class
         );
     }
 

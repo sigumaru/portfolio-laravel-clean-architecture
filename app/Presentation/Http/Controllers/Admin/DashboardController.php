@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Presentation\Http\Controllers\Admin;
 
-use App\Application\UseCases\Blog\GetBlogPostsUseCase;
+use App\Application\Contracts\Interactors\Blog\GetBlogPostsInteractorInterface;
 use App\Domain\Repositories\ContactRepositoryInterface;
 use App\Domain\Repositories\ProfileRepositoryInterface;
 use Illuminate\View\View;
@@ -12,20 +12,20 @@ use Illuminate\View\View;
 final class DashboardController
 {
     public function __construct(
-        private GetBlogPostsUseCase $getBlogPostsUseCase,
+        private GetBlogPostsInteractorInterface $getBlogPostsInteractor,
         private ContactRepositoryInterface $contactRepository,
         private ProfileRepositoryInterface $profileRepository
     ) {}
 
     public function index(): View
     {
-        $totalPosts = $this->getBlogPostsUseCase->executeAll()->count();
-        $publishedPosts = $this->getBlogPostsUseCase->executePublished()->count();
+        $totalPosts = $this->getBlogPostsInteractor->executeAll()->count();
+        $publishedPosts = $this->getBlogPostsInteractor->executePublished()->count();
         $unreadContacts = $this->contactRepository->countUnread();
         $totalContacts = $this->contactRepository->count();
         $profile = $this->profileRepository->find();
 
-        $recentPosts = $this->getBlogPostsUseCase->executeLatest(5);
+        $recentPosts = $this->getBlogPostsInteractor->executeLatest(5);
         $recentContacts = $this->contactRepository->findWithPagination(1, 5);
 
         return view('admin.dashboard', [

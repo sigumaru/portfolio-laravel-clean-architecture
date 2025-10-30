@@ -33,29 +33,44 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     
     // Blog Management
     Route::prefix('blog')->name('blog.')->group(function () {
-        Route::get('/', [BlogManagementController::class, 'index'])->name('index');
-        Route::get('/create', [BlogManagementController::class, 'create'])->name('create');
-        Route::post('/', [BlogManagementController::class, 'store'])->name('store');
-        Route::get('/{id}', [BlogManagementController::class, 'show'])->name('show');
-        Route::get('/{id}/edit', [BlogManagementController::class, 'edit'])->name('edit');
-        Route::put('/{id}', [BlogManagementController::class, 'update'])->name('update');
-        Route::delete('/{id}', [BlogManagementController::class, 'destroy'])->name('destroy');
+        Route::get('/', [BlogManagementController::class, 'index'])
+            ->name('index');
+        Route::get('/create', [BlogManagementController::class, 'create'])
+            ->name('create');
+        Route::post('/', [BlogManagementController::class, 'store'])
+            ->name('store');
+        Route::get('/{id}', [BlogManagementController::class, 'show'])
+            ->name('show');
+        Route::get('/{id}/edit', [BlogManagementController::class, 'edit'])
+            ->name('edit');
+        Route::put('/{id}', [BlogManagementController::class, 'update'])
+            ->name('update');
+        Route::delete('/{id}', [BlogManagementController::class, 'destroy'])
+            ->name('destroy');
     });
     
     // Contact Management
     Route::prefix('contacts')->name('contact.')->group(function () {
-        Route::get('/', [ContactManagementController::class, 'index'])->name('index');
-        Route::get('/{id}', [ContactManagementController::class, 'show'])->name('show');
-        Route::patch('/{id}/mark-as-read', [ContactManagementController::class, 'markAsRead'])->name('mark-as-read');
-        Route::patch('/{id}/mark-as-unread', [ContactManagementController::class, 'markAsUnread'])->name('mark-as-unread');
-        Route::delete('/{id}', [ContactManagementController::class, 'destroy'])->name('destroy');
+        Route::get('/', [ContactManagementController::class, 'index'])
+            ->name('index');
+        Route::get('/{id}', [ContactManagementController::class, 'show'])   
+            ->name('show');
+        Route::patch('/{id}/mark-as-read', [ContactManagementController::class, 'markAsRead'])
+            ->name('mark-as-read');
+        Route::patch('/{id}/mark-as-unread', [ContactManagementController::class, 'markAsUnread'])
+            ->name('mark-as-unread');
+        Route::delete('/{id}', [ContactManagementController::class, 'destroy'])
+            ->name('destroy');
     });
     
     // Profile Management
     Route::prefix('profile')->name('profile.')->group(function () {
-        Route::get('/', [ProfileManagementController::class, 'index'])->name('index');
-        Route::get('/edit', [ProfileManagementController::class, 'edit'])->name('edit');
-        Route::put('/', [ProfileManagementController::class, 'update'])->name('update');
+        Route::get('/', [ProfileManagementController::class, 'index'])
+            ->name('index');
+        Route::get('/edit', [ProfileManagementController::class, 'edit'])
+            ->name('edit');
+        Route::put('/', [ProfileManagementController::class, 'update'])
+            ->name('update');
     });
 });
 

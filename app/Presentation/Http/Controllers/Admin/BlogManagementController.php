@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Presentation\Http\Controllers\Admin;
 
+use App\Application\Contracts\Interactors\Blog\CreateBlogPostInteractorInterface;
+use App\Application\Contracts\Interactors\Blog\DeleteBlogPostInteractorInterface;
+use App\Application\Contracts\Interactors\Blog\GetBlogPostsInteractorInterface;
+use App\Application\Contracts\Interactors\Blog\UpdateBlogPostInteractorInterface;
 use App\Application\DTOs\BlogPostData;
-use App\Application\UseCases\Blog\CreateBlogPostUseCase;
-use App\Application\UseCases\Blog\DeleteBlogPostUseCase;
-use App\Application\UseCases\Blog\GetBlogPostsUseCase;
-use App\Application\UseCases\Blog\UpdateBlogPostUseCase;
 use App\Presentation\Http\Requests\StoreBlogPostRequest;
 use App\Presentation\Http\Requests\UpdateBlogPostRequest;
 use Illuminate\Http\RedirectResponse;
@@ -19,10 +19,10 @@ use Ramsey\Uuid\Uuid;
 final class BlogManagementController
 {
     public function __construct(
-        private CreateBlogPostUseCase $createBlogPostUseCase,
-        private UpdateBlogPostUseCase $updateBlogPostUseCase,
-        private DeleteBlogPostUseCase $deleteBlogPostUseCase,
-        private GetBlogPostsUseCase $getBlogPostsUseCase
+        private CreateBlogPostInteractorInterface $createBlogPostInteractor,
+        private UpdateBlogPostInteractorInterface $updateBlogPostInteractor,
+        private DeleteBlogPostInteractorInterface $deleteBlogPostInteractor,
+        private GetBlogPostsInteractorInterface $getBlogPostsInteractor
     ) {}
 
     public function index(Request $request): View
@@ -30,7 +30,7 @@ final class BlogManagementController
         $page = (int) $request->get('page', 1);
         $perPage = 20;
 
-        $blogPosts = $this->getBlogPostsUseCase->executeAll();
+        $blogPosts = $this->getBlogPostsInteractor->executeAll();
 
         return view('admin.blog.index', [
             'blogPosts' => $blogPosts,
@@ -54,7 +54,7 @@ final class BlogManagementController
         );
 
         try {
-            $blogPost = $this->createBlogPostUseCase->execute($blogPostData);
+            $blogPost = $this->createBlogPostInteractor->execute($blogPostData);
 
             return redirect()->route('admin.blog.index')
                 ->with('success', 'Blog post created successfully!');
@@ -67,7 +67,7 @@ final class BlogManagementController
 
     public function show(string $id): View|RedirectResponse
     {
-        $blogPost = $this->getBlogPostsUseCase->executeBySlug($id);
+        $blogPost = $this->getBlogPostsInteractor->executeBySlug($id);
 
         if (!$blogPost) {
             return redirect()->route('admin.blog.index')
@@ -81,7 +81,7 @@ final class BlogManagementController
 
     public function edit(string $id): View|RedirectResponse
     {
-        $blogPost = $this->getBlogPostsUseCase->executeBySlug($id);
+        $blogPost = $this->getBlogPostsInteractor->executeBySlug($id);
 
         if (!$blogPost) {
             return redirect()->route('admin.blog.index')
@@ -104,7 +104,7 @@ final class BlogManagementController
         );
 
         try {
-            $this->updateBlogPostUseCase->execute($blogPostData);
+            $this->updateBlogPostInteractor->execute($blogPostData);
 
             return redirect()->route('admin.blog.index')
                 ->with('success', 'Blog post updated successfully!');
@@ -118,7 +118,7 @@ final class BlogManagementController
     public function destroy(string $id): RedirectResponse
     {
         try {
-            $this->deleteBlogPostUseCase->execute($id);
+            $this->deleteBlogPostInteractor->execute($id);
 
             return redirect()->route('admin.blog.index')
                 ->with('success', 'Blog post deleted successfully!');

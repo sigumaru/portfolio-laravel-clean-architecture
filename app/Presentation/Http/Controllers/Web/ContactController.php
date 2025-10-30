@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Presentation\Http\Controllers\Web;
 
+use App\Application\Contracts\Interactors\Contact\SendContactInteractorInterface;
 use App\Application\DTOs\ContactData;
-use App\Application\UseCases\Contact\SendContactUseCase;
 use App\Presentation\Http\Requests\SendContactRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -14,7 +14,7 @@ use Ramsey\Uuid\Uuid;
 final class ContactController
 {
     public function __construct(
-        private SendContactUseCase $sendContactUseCase
+        private SendContactInteractorInterface $sendContactInteractor
     ) {}
 
     public function index(): View
@@ -33,7 +33,7 @@ final class ContactController
         );
 
         try {
-            $this->sendContactUseCase->execute($contactData);
+            $this->sendContactInteractor->execute($contactData);
 
             return redirect()->route('contact.index')
                 ->with('success', 'Thank you for your message! We will get back to you soon.');

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Presentation\Http\Controllers\Admin;
 
+use App\Application\Contracts\Interactors\Profile\UpdateProfileInteractorInterface;
 use App\Application\DTOs\ProfileData;
-use App\Application\UseCases\Profile\UpdateProfileUseCase;
 use App\Domain\Repositories\ProfileRepositoryInterface;
 use App\Presentation\Http\Requests\UpdateProfileRequest;
 use Illuminate\Http\RedirectResponse;
@@ -15,7 +15,7 @@ use Ramsey\Uuid\Uuid;
 final class ProfileManagementController
 {
     public function __construct(
-        private UpdateProfileUseCase $updateProfileUseCase,
+        private UpdateProfileInteractorInterface $updateProfileInteractor,
         private ProfileRepositoryInterface $profileRepository
     ) {}
 
@@ -55,7 +55,7 @@ final class ProfileManagementController
         );
 
         try {
-            $this->updateProfileUseCase->execute($profileData);
+            $this->updateProfileInteractor->execute($profileData);
 
             return redirect()->route('admin.profile.index')
                 ->with('success', 'Profile updated successfully!');
