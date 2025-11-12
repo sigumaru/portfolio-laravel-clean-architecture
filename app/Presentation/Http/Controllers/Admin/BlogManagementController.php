@@ -57,21 +57,29 @@ final class BlogManagementController
             $blogPost = $this->createBlogPostInteractor->execute($blogPostData);
 
             return redirect()->route('admin.blog.index')
-                ->with('success', 'Blog post created successfully!');
+                ->with('success', 'ブログ記事を作成しました。');
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error', 'Error creating blog post: ' . $e->getMessage())
+                ->with('error', 'ブログ記事の作成に失敗しました: ' . $e->getMessage())
                 ->withInput();
         }
     }
 
-    public function show(string $id): View|RedirectResponse
+    public function show(string $slug): View|RedirectResponse
     {
-        $blogPost = $this->getBlogPostsInteractor->executeBySlug($id);
+        if (empty($slug)) {
+            return redirect()->route('admin.blog.index')
+                ->with('error', 'スラッグが指定されていません。');
+        }
+
+        // URLエンコードされたスラッグをデコード
+        $decodedSlug = rawurldecode($slug);
+
+        $blogPost = $this->getBlogPostsInteractor->executeBySlug($decodedSlug);
 
         if (!$blogPost) {
             return redirect()->route('admin.blog.index')
-                ->with('error', 'Blog post not found');
+                ->with('error', 'ブログ記事が見つかりませんでした。');
         }
 
         return view('admin.blog.show', [
@@ -79,13 +87,21 @@ final class BlogManagementController
         ]);
     }
 
-    public function edit(string $id): View|RedirectResponse
+    public function edit(string $slug): View|RedirectResponse
     {
-        $blogPost = $this->getBlogPostsInteractor->executeBySlug($id);
+        if (empty($slug)) {
+            return redirect()->route('admin.blog.index')
+                ->with('error', 'スラッグが指定されていません。');
+        }
+
+        // URLエンコードされたスラッグをデコード
+        $decodedSlug = rawurldecode($slug);
+
+        $blogPost = $this->getBlogPostsInteractor->executeBySlug($decodedSlug);
 
         if (!$blogPost) {
             return redirect()->route('admin.blog.index')
-                ->with('error', 'Blog post not found');
+                ->with('error', 'ブログ記事が見つかりませんでした。');
         }
 
         return view('admin.blog.edit', [
@@ -93,10 +109,25 @@ final class BlogManagementController
         ]);
     }
 
-    public function update(UpdateBlogPostRequest $request, string $id): RedirectResponse
+    public function update(UpdateBlogPostRequest $request, string $slug): RedirectResponse
     {
+        if (empty($slug)) {
+            return redirect()->route('admin.blog.index')
+                ->with('error', 'スラッグが指定されていません。');
+        }
+
+        // URLエンコードされたスラッグをデコード
+        $decodedSlug = rawurldecode($slug);
+
+        $blogPost = $this->getBlogPostsInteractor->executeBySlug($decodedSlug);
+
+        if (!$blogPost) {
+            return redirect()->route('admin.blog.index')
+                ->with('error', 'ブログ記事が見つかりませんでした。');
+        }
+
         $blogPostData = BlogPostData::create(
-            id: $id,
+            id: $blogPost->id,
             title: $request->validated('title'),
             content: $request->validated('content'),
             excerpt: $request->validated('excerpt', ''),
@@ -104,27 +135,42 @@ final class BlogManagementController
         );
 
         try {
-            $this->updateBlogPostInteractor->execute($blogPostData);
+            $updatedBlogPost = $this->updateBlogPostInteractor->execute($blogPostData);
 
-            return redirect()->route('admin.blog.index')
-                ->with('success', 'Blog post updated successfully!');
+            return redirect()->route('admin.blog.show', rawurlencode($updatedBlogPost->slug))
+                ->with('success', 'ブログ記事を更新しました。');
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error', 'Error updating blog post: ' . $e->getMessage())
+                ->with('error', 'ブログ記事の更新に失敗しました: ' . $e->getMessage())
                 ->withInput();
         }
     }
 
-    public function destroy(string $id): RedirectResponse
+    public function destroy(string $slug): RedirectResponse
     {
+        if (empty($slug)) {
+            return redirect()->route('admin.blog.index')
+                ->with('error', 'スラッグが指定されていません。');
+        }
+
+        // URLエンコードされたスラッグをデコード
+        $decodedSlug = rawurldecode($slug);
+
+        $blogPost = $this->getBlogPostsInteractor->executeBySlug($decodedSlug);
+
+        if (!$blogPost) {
+            return redirect()->route('admin.blog.index')
+                ->with('error', 'ブログ記事が見つかりませんでした。');
+        }
+
         try {
-            $this->deleteBlogPostInteractor->execute($id);
+            $this->deleteBlogPostInteractor->execute($blogPost->id);
 
             return redirect()->route('admin.blog.index')
-                ->with('success', 'Blog post deleted successfully!');
+                ->with('success', 'ブログ記事を削除しました。');
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error', 'Error deleting blog post: ' . $e->getMessage());
+                ->with('error', 'ブログ記事の削除に失敗しました: ' . $e->getMessage());
         }
     }
 }

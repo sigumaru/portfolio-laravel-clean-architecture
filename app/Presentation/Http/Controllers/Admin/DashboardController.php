@@ -19,13 +19,20 @@ final class DashboardController
 
     public function index(): View
     {
-        $totalPosts = $this->getBlogPostsInteractor->executeAll()->count();
+        $allPosts = $this->getBlogPostsInteractor->executeAll();
+        $totalPosts = $allPosts->count();
         $publishedPosts = $this->getBlogPostsInteractor->executePublished()->count();
         $unreadContacts = $this->contactRepository->countUnread();
         $totalContacts = $this->contactRepository->count();
         $profile = $this->profileRepository->find();
 
-        $recentPosts = $this->getBlogPostsInteractor->executeLatest(5);
+        // 最新5件の記事（公開・非公開含む）を取得
+        $recentPosts = new \App\Application\Responses\BlogPostListResponse(
+            blogPosts: array_slice($allPosts->blogPosts, 0, 5),
+            total: min(5, $totalPosts),
+            page: 1,
+            perPage: 5
+        );
         $recentContacts = $this->contactRepository->findWithPagination(1, 5);
 
         return view('admin.dashboard', [

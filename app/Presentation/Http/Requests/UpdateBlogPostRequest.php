@@ -16,8 +16,8 @@ final class UpdateBlogPostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['required', 'string', 'max:255', 'min:5'],
-            'content' => ['required', 'string', 'min:50'],
+            'title' => ['required', 'string', 'max:255'],
+            'content' => ['required', 'string'],
             'excerpt' => ['nullable', 'string', 'max:500'],
             'is_published' => ['boolean'],
         ];
@@ -26,22 +26,20 @@ final class UpdateBlogPostRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'title.required' => 'The blog post title is required.',
-            'title.min' => 'The title must be at least 5 characters long.',
-            'title.max' => 'The title cannot exceed 255 characters.',
-            'content.required' => 'The blog post content is required.',
-            'content.min' => 'The content must be at least 50 characters long.',
-            'excerpt.max' => 'The excerpt cannot exceed 500 characters.',
+            'title.required' => 'タイトルは必須です。',
+            'title.max' => 'タイトルは255文字以内で入力してください。',
+            'content.required' => '本文は必須です。',
+            'excerpt.max' => '概要は500文字以内で入力してください。',
         ];
     }
 
     public function attributes(): array
     {
         return [
-            'title' => 'title',
-            'content' => 'content',
-            'excerpt' => 'excerpt',
-            'is_published' => 'publication status',
+            'title' => 'タイトル',
+            'content' => '本文',
+            'excerpt' => '概要',
+            'is_published' => '公開設定',
         ];
     }
 

@@ -30,7 +30,10 @@ final class BlogController
 
     public function show(string $slug): View|RedirectResponse
     {
-        $blogPost = $this->getBlogPostsInteractor->executeBySlug($slug);
+        // URLエンコードされたスラッグをデコード
+        $decodedSlug = rawurldecode($slug);
+
+        $blogPost = $this->getBlogPostsInteractor->executeBySlug($decodedSlug);
 
         if (!$blogPost) {
             return redirect()->route('blog.index')
