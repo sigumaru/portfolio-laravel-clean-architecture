@@ -30,12 +30,6 @@
             </div>
 
             <div style="border: 1px solid #e5e7eb; padding: 1.5rem; background: #f9fafb;">
-                <h3 style="margin: 0 0 0.5rem 0; font-size: 0.875rem; color: #6b7280;">お問い合わせ</h3>
-                <p style="margin: 0; font-size: 2rem; font-weight: bold; color: #1f2937;">{{ $stats['total_contacts'] ?? 0 }}</p>
-                <p style="margin: 0.25rem 0 0 0; font-size: 0.75rem; color: #dc2626;">未読: {{ $stats['unread_contacts'] ?? 0 }}</p>
-            </div>
-
-            <div style="border: 1px solid #e5e7eb; padding: 1.5rem; background: #f9fafb;">
                 <h3 style="margin: 0 0 0.5rem 0; font-size: 0.875rem; color: #6b7280;">プロフィール</h3>
                 <p style="margin: 0; font-size: 1.25rem; font-weight: bold; color: {{ $stats['has_profile'] ? '#059669' : '#dc2626' }};">
                     {{ $stats['has_profile'] ? '設定済み' : '未設定' }}
@@ -82,47 +76,6 @@
             </table>
             <p style="margin-top: 1rem;">
                 <a href="{{ route('admin.blog.index') }}" style="color: #2563eb;">すべてのブログ記事を見る →</a>
-            </p>
-        @endif
-    </section>
-
-    <section style="margin-bottom: 2rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-            <h2 style="margin: 0;">最近のお問い合わせ</h2>
-        </div>
-        @if(empty($recent_contacts) || count($recent_contacts) === 0)
-            <p style="color: #6b7280;">お問い合わせがまだありません。</p>
-        @else
-            <table border="1" cellpadding="8" cellspacing="0" style="width: 100%; border-collapse: collapse;">
-                <thead style="background: #f9fafb;">
-                    <tr>
-                        <th style="text-align: left;">名前</th>
-                        <th style="text-align: left;">メッセージ</th>
-                        <th style="text-align: center; width: 80px;">状態</th>
-                        <th style="text-align: center; width: 100px;">操作</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($recent_contacts as $contact)
-                        <tr style="background: {{ $contact->isRead() ? '#fff' : '#fef3c7' }};">
-                            <td>{{ $contact->getName() }}</td>
-                            <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                                {{ \Illuminate\Support\Str::limit($contact->getMessage(), 50) }}
-                            </td>
-                            <td style="text-align: center;">
-                                <span style="padding: 0.25rem 0.5rem; background: {{ $contact->isRead() ? '#e5e7eb' : '#fef3c7' }}; color: {{ $contact->isRead() ? '#374151' : '#92400e' }}; border-radius: 0.25rem; font-size: 0.75rem;">
-                                    {{ $contact->isRead() ? '既読' : '未読' }}
-                                </span>
-                            </td>
-                            <td style="text-align: center;">
-                                <a href="{{ route('admin.contact.show', $contact->getId()) }}" style="color: #2563eb;">詳細</a>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-            <p style="margin-top: 1rem;">
-                <a href="{{ route('admin.contact.index') }}" style="color: #2563eb;">すべてのお問い合わせを見る →</a>
             </p>
         @endif
     </section>

@@ -47,21 +47,21 @@ final class ProfileManagementController
             name: $request->validated('name'),
             title: $request->validated('title'),
             bio: $request->validated('bio'),
-            profileImage: $request->validated('profile_image', ''),
-            skills: $request->validated('skills', []),
-            experience: $request->validated('experience', []),
-            education: $request->validated('education', []),
-            socialLinks: $request->validated('social_links', [])
+            profileImage: $request->validated('profile_image') ?? '',
+            skills: $request->validated('skills') ?? [],
+            experience: $request->validated('experience') ?? [],
+            education: $request->validated('education') ?? [],
+            socialLinks: $request->validated('social_links') ?? []
         );
 
         try {
             $this->updateProfileInteractor->execute($profileData);
 
             return redirect()->route('admin.profile.index')
-                ->with('success', 'Profile updated successfully!');
+                ->with('success', 'プロフィールを更新しました。');
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error', 'Error updating profile: ' . $e->getMessage())
+                ->with('error', 'プロフィールの更新に失敗しました: ' . $e->getMessage())
                 ->withInput();
         }
     }

@@ -14,6 +14,7 @@
     </div>
 @endif
 
+<div style="border: 2px solid #e5e7eb; border-radius: 8px; padding: 2rem; background: #ffffff;">
 <form action="{{ route('admin.blog.update', rawurlencode($blogPost->slug)) }}" method="POST">
     @csrf
     @method('PUT')
@@ -24,5 +25,6 @@
     </button>
     <a href="{{ route('admin.blog.index') }}" style="margin-left:1rem;">一覧に戻る</a>
 </form>
+</div>
 </body>
 </html>

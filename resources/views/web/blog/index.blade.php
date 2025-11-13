@@ -1,12 +1,6 @@
-@auth
-<div style="background:#f0f9ff; border:1px solid #0ea5e9; padding:0.75rem 1rem; margin-bottom:1.5rem;">
-    <span style="color:#0369a1; font-weight:bold; margin-right:1rem;">管理者メニュー:</span>
-    <a href="{{ route('admin.blog.index') }}" style="color:#0369a1; margin-right:1rem;">ブログ管理</a>
-    <a href="{{ route('admin.blog.create') }}" style="color:#0369a1; margin-right:1rem;">新規作成</a>
-    <a href="{{ route('admin.dashboard') }}" style="color:#0369a1;">ダッシュボード</a>
-</div>
-@endauth
+@include('web.partials.nav')
 
+<div style="border: 2px solid #e5e7eb; border-radius: 8px; padding: 2rem; background: #ffffff;">
 <h1>Blog 投稿一覧</h1>
 @if (empty($blogPosts->blogPosts))
     <p>公開されているブログ記事がまだありません。</p>
@@ -45,3 +39,4 @@
         <p style="margin-top:1.5rem; color:#6b7280;">現在のページ: {{ $blogPosts->page ?? 1 }}</p>
     @endif
 @endif
+</div>

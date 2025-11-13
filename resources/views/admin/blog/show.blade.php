@@ -20,6 +20,7 @@
     </div>
 @endif
 
+<div style="border: 2px solid #e5e7eb; border-radius: 8px; padding: 2rem; background: #ffffff;">
 <dl>
     <dt>タイトル</dt>
     <dd>{{ $blogPost->title }}</dd>
@@ -54,6 +55,7 @@
 <div style="margin-top:1.5rem;">
     <a href="{{ route('admin.blog.edit', rawurlencode($blogPost->slug)) }}">編集</a> |
     <a href="{{ route('admin.blog.index') }}">一覧に戻る</a>
+</div>
 </div>
 </body>
 </html>

@@ -59,3 +59,23 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Laravel開発サーバー起動コマンド
+~~~ cmd
+php artisan serve
+~~~
+デフォルトでは http://localhost:8000 で起動します。
+オプション：
+ポート番号を指定する場合：
+~~~ cmd
+php artisan serve --port=8080
+~~~
+ホストを指定する場合：
+~~~ cmd
+php artisan serve --host=0.0.0.0 --port=8000
+~~~
+起動手順：  
+プロジェクトのルートディレクトリにいることを確認  
+php artisan serve を実行  
+ブラウザで http://localhost:8000 にアクセス  
+サーバーを停止する場合は Ctrl+C を押してください。  
